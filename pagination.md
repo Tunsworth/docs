@@ -12,7 +12,7 @@
     - [Converting Results To JSON](#converting-results-to-json)
 - [Customizing The Pagination View](#customizing-the-pagination-view)
     - [Using Bootstrap](#using-bootstrap)
-- [Transform paginated collection](#transform-paginated-collection)  
+- [Transform Paginated Collection](#transform-paginated-collection)  
 - [Paginator and LengthAwarePaginator Instance Methods](#paginator-instance-methods)
 - [Cursor Paginator Instance Methods](#cursor-paginator-instance-methods)
 
@@ -334,13 +334,19 @@ Laravel includes pagination views built using [Bootstrap CSS](https://getbootstr
     }
 
 <a name="transform-paginated-collection"></a>
-## Transform paginated collection 
+## Transform Paginated Collection 
 
 Sometimes you may need to perform transform on the items returned by the paginator. The `through` method provides a very clean way to achieve this. It allows you to transform each item in the slice of items using a given callback.  This provides the ability to painlessly modify the data returned by the paginator without affecting the paginator's meta information.
 
     $users->through(function ($user){
 
-        return $user;
+        return [
+            'id' => $user->id,
+            'name' => $user->firstName . ' ' . $user->lastName,
+            'email' => $user->email,
+            'phone' => $user->phone ?? 'N/A',
+            'time_since_sign_up' => $user->created_at->diffForHumans(),
+        ];
 
     });
 
